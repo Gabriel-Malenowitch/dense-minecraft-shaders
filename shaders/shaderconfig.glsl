@@ -15,3 +15,25 @@
 
 // Velocidade do vento
 #define WAVE_SPEED 1.0
+
+// ==========================================
+// CONFIGURAÇÕES DE SOMBRAS
+// ==========================================
+
+// Habilitar sombras (1 = ligado, 0 = desligado)
+#define SHADOWS 1
+
+// Resolução do shadowmap (maior = melhor qualidade, pior performance)
+// Valores: 1024, 2048, 4096
+const int shadowMapResolution = 1024;
+
+// Distância das sombras em blocos
+#define SHADOW_DISTANCE 64.0
+
+// Suavidade das sombras (PCF samples)
+// 0 = rápido (pixelado), 1 = suave (melhor visual)
+#define SHADOW_SOFTNESS 1
+
+// Bias para evitar shadow acne (listras nas sombras)
+// Aumentado levemente para reduzir artefatos
+#define SHADOW_BIAS 0.002

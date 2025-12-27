@@ -8,9 +8,13 @@ attribute vec4 mc_midTexCoord;
 varying vec2 texcoord;
 varying vec2 lmcoord;
 varying vec4 glcolor;
+varying vec4 shadowPos;
 
 uniform float frameTimeCounter;
 uniform vec3 cameraPosition;
+uniform mat4 shadowProjection;
+uniform mat4 shadowModelView;
+uniform mat4 gbufferModelViewInverse;
 
 void main() {
     vec4 position = gl_Vertex;
@@ -51,6 +55,26 @@ void main() {
         float height = fract(position.y);
         position.x += wave * TALL_PLANTS_WAVE_STRENGTH * height;
     }
+    #endif
+    
+    // CALCULA POSIÇÃO NO SHADOWMAP
+    #if SHADOWS == 1
+    // 1. Espaço View (Relativo a Camera) -> Espaço World (Absoluto)
+    vec4 viewPos = gl_ModelViewMatrix * position;
+    vec4 worldPos = gbufferModelViewInverse * viewPos;
+    
+    // 2. Espaço World -> Espaço Shadow View (Relativo ao Sol)
+    vec4 shadowPosition = shadowModelView * worldPos;
+    
+    // 3. Espaço Shadow View -> Espaço Shadow Clip
+    shadowPosition = shadowProjection * shadowPosition;
+    
+    // Sem distortion
+    // float distortion = length(shadowPosition.xy);
+    // distortion = distortion * 0.9 + 0.1;
+    // shadowPosition.xy /= distortion;
+    
+    shadowPos = shadowPosition;
     #endif
     
     gl_Position = gl_ModelViewProjectionMatrix * position;
